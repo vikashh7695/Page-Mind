@@ -11,7 +11,12 @@ from pdf2image import convert_from_bytes
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=[
+    "https://page-mind-alpha.vercel.app",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "null"
+])
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 MODEL_NAME = "llama-3.1-8b-instant"
