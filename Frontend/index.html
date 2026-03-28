@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PageMind — PDF Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="noise"></div>
+
+  <header>
+    <div class="logo">Page<span>Mind</span></div>
+    <div class="tagline">AI-Powered PDF Summarizer</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Drop a PDF.<br/><em>Get the essence.</em></h1>
+      <p class="sub">Upload any document and let local AI extract what matters — privately, instantly, for free.</p>
+    </section>
+
+    <section class="upload-section">
+      <div class="upload-box" id="dropZone">
+        <div class="upload-icon">⬆</div>
+        <div class="upload-text">Drag & drop your PDF here</div>
+        <div class="upload-sub">or click to browse</div>
+        <input type="file" id="fileInput" accept=".pdf" hidden />
+      </div>
+
+      <div class="file-info" id="fileInfo" style="display:none;">
+        <span class="file-icon">📄</span>
+        <span class="file-name" id="fileName"></span>
+        <button class="remove-btn" id="removeFile">✕</button>
+      </div>
+
+      <button class="summarize-btn" id="summarizeBtn" disabled>
+        <span id="btnText">Summarize PDF</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </section>
+
+    <section class="result-section" id="resultSection" style="display:none;">
+      <div class="result-header">
+        <h2>Summary</h2>
+        <div class="result-actions">
+          <button class="action-btn" id="copyBtn">Copy</button>
+          <button class="action-btn" id="newBtn">New PDF</button>
+        </div>
+      </div>
+      <div class="result-box" id="resultBox"></div>
+      <div class="result-meta" id="resultMeta"></div>
+    </section>
+
+    <section class="loading-section" id="loadingSection" style="display:none;">
+      <div class="loader-ring"></div>
+      <p class="loading-text">Reading your document<span class="dots">...</span></p>
+      <p class="loading-sub">This may take 20–60 seconds depending on document size</p>
+    </section>
+
+    <section class="error-section" id="errorSection" style="display:none;">
+      <div class="error-icon">⚠</div>
+      <p class="error-text" id="errorText"></p>
+      <button class="action-btn" id="retryBtn">Try Again</button>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Powered by <strong>LM Studio</strong> · Runs 100% locally · No data leaves your machine</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
