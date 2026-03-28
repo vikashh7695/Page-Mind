@@ -7,6 +7,9 @@ from groq import Groq
 import pytesseract
 from pdf2image import convert_from_bytes
 
+# For Windows — tell pytesseract where Tesseract is installed
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 app = Flask(__name__)
 CORS(app)
 
