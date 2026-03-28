@@ -3,3 +3,6 @@ flask-cors
 pdfplumber
 groq
 gunicorn
+pytesseract
+pdf2image
+pillow

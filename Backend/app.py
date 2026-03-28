@@ -2,23 +2,49 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pdfplumber
 import os
+import io
 from groq import Groq
+import pytesseract
+from pdf2image import convert_from_bytes
 
 app = Flask(__name__)
 CORS(app)
 
-# Groq client — reads GROQ_API_KEY from environment variable
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 MODEL_NAME = "llama-3.1-8b-instant"
 
-def extract_text_from_pdf(file):
+def extract_text_normal(file_bytes):
+    """Extract text from normal (text-based) PDF"""
     text = ""
-    with pdfplumber.open(file) as pdf:
+    with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
         for page in pdf.pages:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + "\n"
     return text.strip()
+
+def extract_text_ocr(file_bytes):
+    """Extract text from scanned PDF using OCR"""
+    text = ""
+    images = convert_from_bytes(file_bytes, dpi=200)
+    for image in images:
+        page_text = pytesseract.image_to_string(image)
+        if page_text:
+            text += page_text + "\n"
+    return text.strip()
+
+def extract_text_from_pdf(file):
+    """Try normal extraction first, fall back to OCR"""
+    file_bytes = file.read()
+
+    # Try normal text extraction first
+    text = extract_text_normal(file_bytes)
+
+    # If no text found, use OCR
+    if not text or len(text) < 50:
+        text = extract_text_ocr(file_bytes)
+
+    return text
 
 def summarize_text(text):
     max_chars = 8000
@@ -63,7 +89,7 @@ def summarize():
         text = extract_text_from_pdf(file)
 
         if not text:
-            return jsonify({"error": "Could not extract text from PDF. It may be scanned or image-based."}), 400
+            return jsonify({"error": "Could not extract text even with OCR."}), 400
 
         summary = summarize_text(text)
         return jsonify({"summary": summary, "characters_extracted": len(text)})
