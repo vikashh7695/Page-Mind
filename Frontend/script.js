@@ -72,6 +72,28 @@ removeFile.addEventListener("click", () => {
 // --- Summarize ---
 summarizeBtn.addEventListener("click", summarize);
 
+function formatSummary(text) {
+  return text
+    // Remove ** bold markers but keep the text
+    .replace(/\*\*(.*?)\*\*/g, '<span class="summary-heading">$1</span>')
+    // Remove single * italic markers
+    .replace(/\*(.*?)\*/g, '$1')
+    // Handle bullet points with *
+    .replace(/^\* (.+)/gm, '<li>$1</li>')
+    // Handle bullet points with -
+    .replace(/^- (.+)/gm, '<li>$1</li>')
+    // Wrap consecutive li items in ul
+    .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+    // Handle # headings
+    .replace(/^### (.+)/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)/gm, '<h1>$1</h1>')
+    // Convert line breaks to paragraphs
+    .split('\n\n')
+    .map(para => para.trim() ? `<p>${para.replace(/\n/g, '<br>')}</p>` : '')
+    .join('');
+}
+
 async function summarize() {
   if (!selectedFile) return;
 
@@ -97,7 +119,7 @@ async function summarize() {
 
     loadingSection.style.display = "none";
     resultSection.style.display = "block";
-    resultBox.textContent = data.summary;
+    resultBox.innerHTML = formatSummary(data.summary);
     resultMeta.textContent = `✦ ${data.characters_extracted.toLocaleString()} characters extracted from "${selectedFile.name}"`;
 
   } catch (err) {
