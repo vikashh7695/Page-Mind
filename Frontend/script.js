@@ -1,6 +1,6 @@
 const BACKEND_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://localhost:5000"
-  : "https://YOUR_RAILWAY_URL.railway.app"; // 🔁 Replace this after Railway deployment
+  : "https://page-mind-production.up.railway.app"; // 🔁 Replace this after Railway deployment
 
 // Elements
 const dropZone = document.getElementById("dropZone");
